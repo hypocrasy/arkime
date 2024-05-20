@@ -645,6 +645,7 @@ typedef struct arkime_session {
     GArray                *filePosArray;
     GArray                *fileLenArray;
     GArray                *fileNumArray;
+    GArray                *fileTsArray;
     char                  *rootId;
 
     struct timeval         firstPacket;

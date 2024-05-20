@@ -614,6 +614,7 @@ void arkime_db_save_session(ArkimeSession_t *session, int final)
     jsonSize = 1300 + session->filePosArray->len * 17 + 11 * session->fileNumArray->len;
     if (config.enablePacketLen) {
         jsonSize += 10 * session->fileLenArray->len;
+        jsonSize += 40 * session->fileTsArray->len;
     }
 
     for (int pos = 0; pos < session->maxFields; pos++) {
@@ -1011,6 +1012,15 @@ void arkime_db_save_session(ArkimeSession_t *session, int final)
             if (i != 0)
                 BSB_EXPORT_u08(jbsb, ',');
             BSB_EXPORT_sprintf(jbsb, "%u", (uint16_t)g_array_index(session->fileLenArray, uint16_t, i));
+        }
+        BSB_EXPORT_cstr(jbsb, "],");
+        BSB_EXPORT_cstr(jbsb, "\"packetTs\":[");
+        for(i = 0; i < session->fileTsArray->len; i++) {
+            if (i != 0)
+                BSB_EXPORT_u08(jbsb, ',');
+            //BSB_EXPORT_sprintf(jbsb, "%u", (uint16_t)g_array_index(session->fileLenArray, uint16_t, i));
+            uint64_t t=g_array_index(session->fileTsArray,uint64_t,i);
+            BSB_EXPORT_sprintf(jbsb,"%llu",t);
         }
         BSB_EXPORT_cstr(jbsb, "],");
     }

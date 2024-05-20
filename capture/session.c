@@ -352,6 +352,8 @@ LOCAL void arkime_session_free (ArkimeSession_t *session)
     g_array_free(session->filePosArray, TRUE);
     if (config.enablePacketLen) {
         g_array_free(session->fileLenArray, TRUE);
+        g_array_free(session->fileTsArray, TRUE);        
+
     }
     g_array_free(session->fileNumArray, TRUE);
 
@@ -448,6 +450,7 @@ void arkime_session_mid_save(ArkimeSession_t *session, uint32_t tv_sec)
     g_array_set_size(session->filePosArray, 0);
     if (config.enablePacketLen) {
         g_array_set_size(session->fileLenArray, 0);
+        g_array_set_size(session->fileTsArray, 0);
     }
     g_array_set_size(session->fileNumArray, 0);
     session->lastFileNum = 0;
@@ -727,6 +730,8 @@ ArkimeSession_t *arkime_session_find_or_create(int mProtocol, uint32_t hash, uin
     session->filePosArray = g_array_sized_new(FALSE, FALSE, sizeof(uint64_t), 100);
     if (config.enablePacketLen) {
         session->fileLenArray = g_array_sized_new(FALSE, FALSE, sizeof(uint16_t), 100);
+        session->fileTsArray = g_array_sized_new(FALSE, FALSE, sizeof(uint64_t), 100);
+
     }
     session->fileNumArray = g_array_new(FALSE, FALSE, 4);
     session->fields = ARKIME_SIZE_ALLOC0(fields, sizeof(ArkimeField_t *) * config.maxDbField);

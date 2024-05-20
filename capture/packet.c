@@ -298,8 +298,14 @@ LOCAL void arkime_packet_process(ArkimePacket_t *packet, int thread)
             g_array_append_val(session->filePosArray, packet->writerFilePos);
 
             if (config.enablePacketLen) {
+                struct timeval ts;
                 len = 16 + packet->pktlen;
+                ts=packet->ts;
+                if(packet->direction==1) len=(-1)*len;
                 g_array_append_val(session->fileLenArray, len);
+                
+                u_int64_t time=((uint64_t)ts.tv_sec) * 1000 + ((uint64_t)ts.tv_usec) / 1000;
+                g_array_append_val(session->fileTsArray, time);
             }
         }
 
